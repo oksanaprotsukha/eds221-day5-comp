@@ -1,0 +1,29 @@
+---
+title: "Unit test part 2"
+format: html
+editor: visual
+---
+
+```{r}
+
+source(here::here("src", "name_cart_function.R"))
+
+name_cart(food = "enchilada", animal = "cat")
+```
+
+```{r}
+
+source(here::here("src", "cork_oak_growth.R"))
+height_t2(height_t1 = 10, t1 = 20, t2 = 30)
+
+
+# height_t2: oak height at time 2 (meters)
+# height_t1: oak height at time 1 (meters)
+# t1: tree age at time 1, (years)
+# t2: tree age at time 2 (years)
+
+#height_t2 <- function(height_t1, t1, t2) {
+#  20.7216 / (1 - (1 - 20.7216 / height_t1) * (t1 / t2) ^ 1.4486)
+#}
+
+```
