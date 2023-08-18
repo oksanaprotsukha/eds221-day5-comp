@@ -46,22 +46,35 @@ Add line-by-line comments wheres prompted in the code below, explaining what eac
 # The line below...
 time_yr <- seq(from = 0, to = 8, by = 1)
 
+# creates a vector with the period range for which we want to model fish population
+
 # The line below...
+# --- creates a storage matrix with the columns = fish_year0 values ; rows = projection year
 proj_year <- matrix(ncol = length(fish_year0), nrow = length(time_yr))
 
 # The line below...
+# --- populates the 1st row of the storage matrix with the initial condition in year 0
+# --- the rest of the rows will be set to NA at this step
 proj_year[1, ] <- fish_year0
 
+
+
 # The for loop below...
+# --- populates the remaining rows of the matrix [2:8] using dotproduct between fish_leslie matrix and the vector with the fish population values from the previous cycle
+# --- the first row has already been populated in the previous step
 for (i in 2:length(time_yr)) {
+  # --- proj_year[i-1,] returns the vector with the values of the fish population from the previous cycle
   proj_year[i,] <- fish_leslie %*% proj_year[i-1,]
 }
 
-
 # The rest is wrangling & visualization (run to check it out):
+# --- assign the column names to the proj_year matrix
 colnames(proj_year) <- c("eggs", "fry", "juvenile", "adult")
 
+# --- convert data in the format friendly to plot different categories on a single chart (here: lifestages)
 proj_df <- data.frame(time_yr, proj_year) %>% 
+  # --- pivot longer for all lines excluding time_yr ("-time_yr")
+  # --- pivot longer allows to merge multiple columns into a single column
   pivot_longer(cols = -time_yr, names_to = "lifestage", values_to = "stage_population")
 
 ggplot(data = proj_df, aes(x = time_yr, y = stage_population)) +
@@ -71,3 +84,23 @@ ggplot(data = proj_df, aes(x = time_yr, y = stage_population)) +
 ```
 
 Test different combinations of survival / reproduction and starting population structures to see what happens! 
+
+### Demo pivot longer function
+```{r}
+demo <- data.frame(year = c(1995, 2000, 2005),
+                   dogs = c(2, 4, 6),
+                   cats = c(12, 14, 18))
+
+```
+
+```{r}
+ggplot(data = demo) +
+  geom_line(aes(x= year, y = cats)) +
+  geom_line(aes(x= year, y = dogs)) 
+```
+
+```{r}
+
+demo <- pivot_longer(cols = c(cats, dogs), names_to = "species", values_to = "count" )
+```
+

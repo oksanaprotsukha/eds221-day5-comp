@@ -1,0 +1,52 @@
+---
+title: "Functions: unit testing"
+format: html
+editor: visual
+---
+
+```{r}
+library(testthat)
+library(remotes)
+library(devtools)
+```
+
+#### Write a function
+
+```{r}
+mean_range <- function(df){
+  col_means <- apply(X = df, MARGIN = 2, FUN = mean, na.rm = TRUE)
+  col_mean_max <- max(col_means)
+  col_mean_min <- min(col_means)
+  # --- return a vector with the range of means: min value and max value
+  return(c(col_mean_min, col_mean_max))
+}
+
+```
+
+```{r}
+mean_range(mtcars)
+```
+
+```{r}
+mean_range(faithful)
+```
+
+```{r}
+# --- unit tests
+
+# --- columns in the final vector are numeric
+expect_type(mean_range(mtcars), "double")
+
+
+# --- min < max 
+expect_true(mean_range(mtcars)[1] <= mean_range(mtcars)[2])
+
+
+# --- min = max if all values in df are equal
+# --- < > 
+
+# --- length of the vector should be 2
+expect_length(mean_range(mtcars), 2)
+
+
+```
